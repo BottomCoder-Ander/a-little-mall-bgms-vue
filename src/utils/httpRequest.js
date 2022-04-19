@@ -32,6 +32,7 @@ http.interceptors.request.use(
  */
 http.interceptors.response.use(
   response => {
+    console.log(response);
     if (!response.data) {
       console.log(response);
       return Promise.reject(new Error("响应没有data属性"));
@@ -42,12 +43,12 @@ http.interceptors.response.use(
       clearLoginInfo();
       Message.error("Token失效");
       router.push({ name: "login" });
-    } else if (response.data.code !== 200 && response.data.code !== 20000) {
+    } else if (response.status !== 200) {
       console.log(response);
-      Message.error("请求错误，Code=" + response.data.code);
-      return Promise.reject(new Error(response.code));
+      Message.error("请求错误，status=" + response.status);
+      return Promise.reject(new Error(response.status));
     }
-    return response.data;
+    return response;
   },
   error => {
     return Promise.reject(error);
